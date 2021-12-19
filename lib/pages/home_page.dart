@@ -1,13 +1,19 @@
+import 'package:device_calendar/device_calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:minimalarm/logic/calendar_notifier.dart';
 import 'package:minimalarm/logic/time_notifier.dart';
 import 'package:minimalarm/pages/settings_menu.dart';
 import 'package:minimalarm/utils/colors.dart';
 import 'package:minimalarm/utils/utils.dart';
+import 'package:minimalarm/widgets/event_card.dart';
 import 'package:minimalarm/widgets/my_icon_button.dart';
 
 var timeProvider = StateNotifierProvider<TimeNotifier, TimeState>(
     (ref) => TimeNotifier()..init());
+
+var calendarProvider = StateNotifierProvider<CalendarNotifier, CalendarState>(
+    (ref) => CalendarNotifier(DeviceCalendarPlugin())..init());
 
 class HomePage extends ConsumerWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -36,7 +42,7 @@ class HomePage extends ConsumerWidget {
                 color: textColor,
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 20),
             ref.watch(timeProvider).time.fold(
                   () => MyIconButton(
                       icon: Icons.add_rounded,
@@ -140,7 +146,14 @@ class HomePage extends ConsumerWidget {
                       ),
                     ],
                   ),
-                )
+                ),
+            if (ref.watch(calendarProvider).calendarSetting)
+              Column(
+                children: const [
+                  SizedBox(height: 50),
+                  EventCard(),
+                ],
+              )
           ],
         ),
       ),

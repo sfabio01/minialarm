@@ -7,7 +7,6 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
   void init() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var notifications = prefs.getBool("notifications");
-    var googleCalendar = prefs.getBool("googleCalendar");
     var format24 = prefs.getBool("format24");
     var sound = prefs.getString("sound");
     var vibrate = prefs.getBool("vibrate");
@@ -15,7 +14,6 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
 
     state = state.copyWith(
       notifications: notifications ?? true,
-      googleCalendar: googleCalendar ?? false,
       format24: format24 ?? false,
       sound: sound ?? "default",
       vibrate: vibrate ?? true,
@@ -28,10 +26,6 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
     switch (key) {
       case "notifications":
         state = state.copyWith(notifications: value);
-        prefs.setBool(key, value);
-        break;
-      case "googleCalendar":
-        state = state.copyWith(googleCalendar: value);
         prefs.setBool(key, value);
         break;
       case "format24":
@@ -56,7 +50,6 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
 
 class SettingsState {
   final bool notifications;
-  final bool googleCalendar;
   final bool format24;
   final String sound;
   final int ringDuration;
@@ -64,7 +57,6 @@ class SettingsState {
 
   SettingsState({
     required this.notifications,
-    required this.googleCalendar,
     required this.format24,
     required this.sound,
     required this.ringDuration,
@@ -73,7 +65,6 @@ class SettingsState {
 
   factory SettingsState.initial() => SettingsState(
         notifications: true,
-        googleCalendar: false,
         format24: false,
         sound: "default",
         ringDuration: 5,
@@ -82,7 +73,6 @@ class SettingsState {
 
   SettingsState copyWith({
     bool? notifications,
-    bool? googleCalendar,
     bool? format24,
     String? sound,
     int? ringDuration,
@@ -90,7 +80,6 @@ class SettingsState {
   }) {
     return SettingsState(
       notifications: notifications ?? this.notifications,
-      googleCalendar: googleCalendar ?? this.googleCalendar,
       format24: format24 ?? this.format24,
       sound: sound ?? this.sound,
       ringDuration: ringDuration ?? this.ringDuration,

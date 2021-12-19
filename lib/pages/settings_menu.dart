@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:minimalarm/logic/settings_notifier.dart';
+import 'package:minimalarm/pages/home_page.dart';
 import 'package:minimalarm/utils/colors.dart';
 import 'package:minimalarm/widgets/menu_item.dart';
 import 'package:minimalarm/widgets/number_picker_dialog.dart';
@@ -59,14 +60,14 @@ class SettingsMenu extends ConsumerWidget {
                   ),
                 ),
                 MenuItem(
-                  title: "GOOGLE CALENDAR",
+                  title: "CALENDAR",
                   subtitle:
                       "CONNECT YOUR CALENDAR TO MAKE SURE YOU DON’T MISS ANY EVENT",
                   trailing: Switch(
                     activeColor: accentColor,
-                    value: ref.watch(settingsProvider).googleCalendar,
+                    value: ref.watch(calendarProvider).calendarSetting,
                     onChanged: (newValue) {
-                      // TODO
+                      ref.read(calendarProvider.notifier).changeSetting();
                     },
                   ),
                 ),
