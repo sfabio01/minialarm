@@ -41,7 +41,7 @@ class EventCard extends ConsumerWidget {
               const SizedBox(height: 4.0),
               event.fold(
                 () => Text(
-                  "There are no planned events",
+                  "You have no planned events",
                   style: TextStyle(color: textColor),
                 ),
                 (ev) => Column(
