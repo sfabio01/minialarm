@@ -1,8 +1,10 @@
 import 'package:device_calendar/device_calendar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:minimalarm/logic/calendar_notifier.dart';
 import 'package:minimalarm/logic/time_notifier.dart';
+import 'package:minimalarm/main.dart';
 import 'package:minimalarm/pages/settings_menu.dart';
 import 'package:minimalarm/utils/colors.dart';
 import 'package:minimalarm/utils/utils.dart';

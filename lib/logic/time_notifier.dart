@@ -1,10 +1,13 @@
 import 'package:either_option/either_option.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:minimalarm/utils/utils.dart';
+import 'package:minimalarm/utils/values.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TimeNotifier extends StateNotifier<TimeState> {
+  final _platform = const MethodChannel(channel);
   TimeNotifier() : super(TimeState.initial());
 
   void init() async {
@@ -18,13 +21,35 @@ class TimeNotifier extends StateNotifier<TimeState> {
   }
 
   void changeTime(TimeOfDay newTime) async {
-    var prefs = await SharedPreferences.getInstance();
-    prefs.setInt("hour", newTime.hour);
-    prefs.setInt("min", newTime.minute);
-    state = TimeState(Some(newTime));
+    try {
+      var currentTime = TimeOfDay.now();
+      var now = DateTime.now();
+      var alarmTime =
+          DateTime(now.year, now.month, now.day, newTime.hour, newTime.minute);
+      if (compareTimes(newTime, currentTime) == 1) {
+        // tomorrow
+        alarmTime = alarmTime.add(const Duration(days: 1));
+      }
+
+      var res = await _platform.invokeMethod<int>(
+          "setAlarm", alarmTime.millisecondsSinceEpoch);
+
+      print("ANDROID: $res"); // debug
+
+      var prefs = await SharedPreferences.getInstance();
+      prefs.setInt("hour", newTime.hour);
+      prefs.setInt("min", newTime.minute);
+      state = TimeState(Some(newTime));
+    } on MissingPluginException {
+      // TODO: handle error
+      print("Not implemented"); // debug
+    } on PlatformException {
+      print("Platform exception");
+    }
   }
 
   void removeTime() async {
+    // TODO: call platform channel
     var prefs = await SharedPreferences.getInstance();
     prefs.remove("hour");
     prefs.remove("min");
