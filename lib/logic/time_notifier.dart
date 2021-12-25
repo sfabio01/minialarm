@@ -44,16 +44,20 @@ class TimeNotifier extends StateNotifier<TimeState> {
       // TODO: handle error
       print("Not implemented"); // debug
     } on PlatformException {
-      print("Platform exception");
+      print("Platform exception"); // debug
     }
   }
 
   void removeTime() async {
-    // TODO: call platform channel
-    var prefs = await SharedPreferences.getInstance();
-    prefs.remove("hour");
-    prefs.remove("min");
-    state = TimeState.initial();
+    var res = await _platform.invokeMethod<int>("cancelAlarm");
+    if (res == 0) {
+      var prefs = await SharedPreferences.getInstance();
+      prefs.remove("hour");
+      prefs.remove("min");
+      state = TimeState.initial();
+    } else {
+      // TODO: handle error
+    }
   }
 }
 
