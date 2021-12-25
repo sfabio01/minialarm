@@ -11,6 +11,9 @@
         android:icon="@mipmap/ic_launcher"
         android:label="MiniALARM">
         <activity
+            android:name=".AlarmActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:exported="true"
@@ -52,7 +55,10 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-        <receiver android:name=".AlarmReceiver" android:exported="true" />
+
+        <receiver
+            android:name=".AlarmReceiver"
+            android:exported="true" />
     </application>
 
 </manifest>
