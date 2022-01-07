@@ -31,7 +31,7 @@ class TimeNotifier extends StateNotifier<TimeState> {
         alarmTime = alarmTime.add(const Duration(days: 1));
       }
 
-      var res = await _platform.invokeMethod<int>(
+      var res = await _platform.invokeMethod<String>(
           "setAlarm", alarmTime.millisecondsSinceEpoch);
 
       print("ANDROID: $res"); // debug
@@ -41,7 +41,6 @@ class TimeNotifier extends StateNotifier<TimeState> {
       prefs.setInt("min", newTime.minute);
       state = TimeState(Some(newTime));
     } on MissingPluginException {
-      // TODO: handle error
       print("Not implemented"); // debug
     } on PlatformException {
       print("Platform exception"); // debug

@@ -21,19 +21,22 @@ class AlarmActivity : Activity() {
         val ringtone = RingtoneManager.getRingtone(applicationContext, Uri.parse(ringtoneUri))
         ringtone.play()
 
-        val vibrator: Any
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            vibrator = applicationContext.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
-            vibrator.vibrate(CombinedVibration.createParallel(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE)))
+        if(vibrate) {
+            val vibrator: Any
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                vibrator = applicationContext.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+                vibrator.vibrate(CombinedVibration.createParallel(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE)))
 
-        } else {
-            vibrator = applicationContext.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-            vibrator.vibrate(500)
-
+            } else {
+                vibrator = applicationContext.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+                vibrator.vibrate(500)
+            }
         }
+
 
         closeBtn.setOnClickListener {
             ringtone.stop()
+            finish()
         }
 
 

@@ -16,12 +16,15 @@ class AlarmReceiver: BroadcastReceiver(){
         val defaultRingtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM).toString()
         var vibrate = false
         var ringtoneUri  = defaultRingtoneUri
-        // TODO: check if to vibrate
-        Toast.makeText(context, "Alarm! Wake up! Wake up!", Toast.LENGTH_LONG).show()
         val prefs = context?.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
         if (prefs != null) {
             vibrate = prefs.getBoolean(prefix+"vibrate", false)
-            // TODO ringtoneUri = prefs.getString(prefix+"sound", defaultRingtoneUri).toString()
+            val tempUri =
+                prefs.getString(prefix+"sound", "default==default")?.split("==")?.get(0)
+            print(tempUri)
+            if (tempUri != null && tempUri != "default") {
+                ringtoneUri = tempUri
+            }
             val editor = prefs.edit()
             editor.remove(prefix+"hour")
             editor.remove(prefix+"min")
@@ -33,9 +36,6 @@ class AlarmReceiver: BroadcastReceiver(){
         alarmIntent.putExtra("vibrate", vibrate)
         alarmIntent.putExtra("ringtone", ringtoneUri)
         context?.startActivity(alarmIntent)
-
-
-
 
     }
 

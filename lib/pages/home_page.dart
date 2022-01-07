@@ -1,5 +1,6 @@
 import 'package:device_calendar/device_calendar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_material_pickers/helpers/show_time_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:minimalarm/logic/calendar_notifier.dart';
 import 'package:minimalarm/logic/time_notifier.dart';
@@ -47,9 +48,10 @@ class HomePage extends ConsumerWidget {
                   () => MyIconButton(
                       icon: Icons.add_rounded,
                       onpress: () async {
-                        var time = await showTimePicker(
+                        var time = await showMaterialTimePicker(
                           context: context,
-                          initialTime: TimeOfDay.now(),
+                          selectedTime: TimeOfDay.now(),
+                          title: "SELECT TIME",
                         );
                         if (time != null) {
                           ref.read(timeProvider.notifier).changeTime(time);
@@ -104,23 +106,24 @@ class HomePage extends ConsumerWidget {
                                     actions: [
                                       TextButton(
                                         child: Text(
-                                          "YES",
-                                          style: TextStyle(color: textColor),
-                                        ),
-                                        onPressed: () {
-                                          ref
-                                              .read(timeProvider.notifier)
-                                              .removeTime();
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                      TextButton(
-                                        child: Text(
                                           "NO",
                                           style:
                                               TextStyle(color: secondaryColor),
                                         ),
                                         onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                      TextButton(
+                                        child: Text(
+                                          "YES",
+                                          style:
+                                              TextStyle(color: secondaryColor),
+                                        ),
+                                        onPressed: () {
+                                          ref
+                                              .read(timeProvider.notifier)
+                                              .removeTime();
                                           Navigator.of(context).pop();
                                         },
                                       ),
@@ -131,9 +134,10 @@ class HomePage extends ConsumerWidget {
                           MyIconButton(
                             icon: Icons.edit_rounded,
                             onpress: () async {
-                              var time = await showTimePicker(
+                              var time = await showMaterialTimePicker(
                                 context: context,
-                                initialTime: TimeOfDay.now(),
+                                selectedTime: TimeOfDay.now(),
+                                title: "SELECT TIME",
                               );
                               if (time != null) {
                                 ref

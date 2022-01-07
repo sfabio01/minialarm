@@ -1,8 +1,9 @@
+import 'package:device_calendar/device_calendar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_material_pickers/flutter_material_pickers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:minimalarm/pages/home_page.dart';
 import 'package:minimalarm/utils/colors.dart';
-import 'package:minimalarm/widgets/calendar_picker_dialog.dart';
 
 class EventCard extends ConsumerWidget {
   const EventCard({Key? key}) : super(key: key);
@@ -10,10 +11,22 @@ class EventCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return ref.watch(calendarProvider).calId.fold(
       () => TextButton(
-          onPressed: () {
-            showDialog(
-                context: context,
-                builder: (context) => const CalendarPickerDialog());
+          onPressed: () async {
+            var result = await DeviceCalendarPlugin().retrieveCalendars();
+            var data = result.data!.toList();
+            var selectedCal = await showMaterialRadioPicker<Calendar>(
+              context: context,
+              items: data,
+              backgroundColor: primaryColorDark,
+              transformer: (item) => item.name,
+              title: "SELECT A CALENDAR",
+              buttonTextColor: secondaryColor,
+            );
+            if (selectedCal != null) {
+              ref
+                  .read(calendarProvider.notifier)
+                  .changeCalendar(selectedCal.id!);
+            }
           },
           style: TextButton.styleFrom(
             backgroundColor: Colors.black.withAlpha(50),
