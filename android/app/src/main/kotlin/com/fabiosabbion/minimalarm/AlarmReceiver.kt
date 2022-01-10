@@ -16,6 +16,7 @@ class AlarmReceiver: BroadcastReceiver(){
         val defaultRingtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM).toString()
         var vibrate = false
         var ringtoneUri  = defaultRingtoneUri
+        var duration = 5
         val prefs = context?.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
         if (prefs != null) {
             vibrate = prefs.getBoolean(prefix+"vibrate", false)
@@ -25,6 +26,7 @@ class AlarmReceiver: BroadcastReceiver(){
             if (tempUri != null && tempUri != "default") {
                 ringtoneUri = tempUri
             }
+            duration = prefs.getInt(prefix+"duration",5)
             val editor = prefs.edit()
             editor.remove(prefix+"hour")
             editor.remove(prefix+"min")
@@ -35,6 +37,7 @@ class AlarmReceiver: BroadcastReceiver(){
         alarmIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         alarmIntent.putExtra("vibrate", vibrate)
         alarmIntent.putExtra("ringtone", ringtoneUri)
+        alarmIntent.putExtra("duration", duration)
         context?.startActivity(alarmIntent)
 
     }

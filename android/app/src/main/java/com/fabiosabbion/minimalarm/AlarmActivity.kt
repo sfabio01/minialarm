@@ -17,6 +17,7 @@ class AlarmActivity : Activity() {
 
         val vibrate = intent.getBooleanExtra("vibrate", false)
         val ringtoneUri = intent.getStringExtra("ringtone")
+        val duration = intent.getIntExtra("duration", 5)
 
         val ringtone = RingtoneManager.getRingtone(applicationContext, Uri.parse(ringtoneUri))
         if (!ringtone.isPlaying)
@@ -26,6 +27,16 @@ class AlarmActivity : Activity() {
         if (vibrate) {
             vibrator.vibrate(longArrayOf(2000, 750),0)
         }
+
+        object : CountDownTimer((duration*6000).toLong(), 1000) {
+            override fun onTick(millisUntilFinished: Long) {}
+
+            override fun onFinish() {
+                ringtone.stop()
+                vibrator.cancel()
+                finish()
+            }
+        }.start()
 
         /*
         if(vibrate) {
