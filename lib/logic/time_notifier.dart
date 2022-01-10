@@ -31,7 +31,7 @@ class TimeNotifier extends StateNotifier<TimeState> {
         alarmTime = alarmTime.add(const Duration(days: 1));
       }
 
-      var res = await _platform.invokeMethod<String>(
+      var res = await _platform.invokeMethod<int>(
           "setAlarm", alarmTime.millisecondsSinceEpoch);
 
       print("ANDROID: $res"); // debug

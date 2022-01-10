@@ -15,7 +15,7 @@ import io.flutter.plugin.common.MethodChannel
 
 class MainActivity: FlutterActivity() {
     private val CHANNEL = "com.fabiosabbion.minimalarm/alarm"
-    private lateinit var alarmIntent: PendingIntent
+    private val ALARMCODE = 2001410
 
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
@@ -26,14 +26,12 @@ class MainActivity: FlutterActivity() {
                     val time = call.arguments<Long>()
                     val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
                     if (alarmManager != null){
-                        alarmIntent = Intent(context, AlarmReceiver::class.java).let { intent ->
-                            PendingIntent.getBroadcast(context, 2001410, intent, 0)
+                        val alarmIntent = Intent(context, AlarmReceiver::class.java).let { intent ->
+                            PendingIntent.getBroadcast(context, ALARMCODE, intent, 0)
                         }
                         alarmManager.setAlarmClock(AlarmManager.AlarmClockInfo(time, alarmIntent), alarmIntent)
-                        val prefs = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
-                        val tempUri =
-                            prefs.getString(prefix+"sound", "default==default")?.split("==")?.get(0)
-                        result.success(tempUri)
+
+                        result.success(0)
                     } else {
                         result.error("100", "Couldn't retrieve AlarmManager object", null)
                     }
@@ -41,6 +39,9 @@ class MainActivity: FlutterActivity() {
                 "cancelAlarm" -> {
                     val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
                     if (alarmManager != null) {
+                        val alarmIntent = Intent(context, AlarmReceiver::class.java).let { intent ->
+                            PendingIntent.getBroadcast(context, ALARMCODE, intent, 0)
+                        }
                         alarmManager.cancel(alarmIntent)
                         result.success(0)
                     } else {

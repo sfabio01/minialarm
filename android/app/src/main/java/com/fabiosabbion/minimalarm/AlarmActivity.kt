@@ -19,23 +19,36 @@ class AlarmActivity : Activity() {
         val ringtoneUri = intent.getStringExtra("ringtone")
 
         val ringtone = RingtoneManager.getRingtone(applicationContext, Uri.parse(ringtoneUri))
-        ringtone.play()
+        if (!ringtone.isPlaying)
+            ringtone.play()
 
-        if(vibrate) {
-            val vibrator: Any
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                vibrator = applicationContext.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
-                vibrator.vibrate(CombinedVibration.createParallel(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE)))
-
-            } else {
-                vibrator = applicationContext.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-                vibrator.vibrate(500)
-            }
+        val vibrator = applicationContext.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        if (vibrate) {
+            vibrator.vibrate(longArrayOf(2000, 750),0)
         }
 
+        /*
+        if(vibrate) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                val vibrator = applicationContext.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+                vibrator.vibrate(CombinedVibration.createParallel(VibrationEffect.createWaveform(
+                    longArrayOf(1000, 500), intArrayOf(0, VibrationEffect.DEFAULT_AMPLITUDE),1
+                )))
+
+            } else {
+                val vibrator = applicationContext.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    vibrator.vibrate(VibrationEffect.createWaveform(longArrayOf(1000, 500), intArrayOf(0, VibrationEffect.DEFAULT_AMPLITUDE),1))
+                } else {
+                    vibrator.vibrate(longArrayOf(1000, 500),1)
+                }
+            }
+        }
+        */
 
         closeBtn.setOnClickListener {
             ringtone.stop()
+            vibrator.cancel()
             finish()
         }
 
