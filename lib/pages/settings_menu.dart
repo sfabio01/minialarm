@@ -107,6 +107,8 @@ class _SettingsMenuState extends ConsumerState {
                             .map((e) => CustomMapEntry(
                                 e.key.toString(), e.value.toString()))
                             .toList();
+                        sounds.insert(
+                            0, const CustomMapEntry("default", "default"));
                         var selectedSound =
                             await showMaterialScrollPicker<CustomMapEntry>(
                           context: context,
@@ -116,7 +118,7 @@ class _SettingsMenuState extends ConsumerState {
                           title: "SELECT A SOUND",
                           backgroundColor: primaryColorDark,
                           buttonTextColor: secondaryColor,
-                          transformer: (item) => item.value,
+                          transformer: (item) => item.value.toUpperCase(),
                         );
                         if (selectedSound != null) {
                           ref
