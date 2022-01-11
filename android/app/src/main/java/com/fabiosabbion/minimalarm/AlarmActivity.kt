@@ -2,33 +2,38 @@ package com.fabiosabbion.minimalarm
 
 import android.app.Activity
 import android.content.Context
+import android.media.Ringtone
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.*
+import android.view.WindowManager
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 
 class AlarmActivity : Activity() {
+
+    private lateinit var ringtone: Ringtone
+    private lateinit var vibrator: Vibrator
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_alarm)
-
         val closeBtn: Button = findViewById(R.id.closebtn)
 
         val vibrate = intent.getBooleanExtra("vibrate", false)
         val ringtoneUri = intent.getStringExtra("ringtone")
-        val duration = intent.getIntExtra("duration", 5)
+        val duration = intent.getLongExtra("duration", 5)
 
-        val ringtone = RingtoneManager.getRingtone(applicationContext, Uri.parse(ringtoneUri))
+        ringtone = RingtoneManager.getRingtone(applicationContext, Uri.parse(ringtoneUri))
         if (!ringtone.isPlaying)
             ringtone.play()
 
-        val vibrator = applicationContext.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        vibrator = applicationContext.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         if (vibrate) {
             vibrator.vibrate(longArrayOf(2000, 750),0)
         }
 
-        object : CountDownTimer((duration*6000).toLong(), 1000) {
+        object : CountDownTimer(duration*60000, 1000) {
             override fun onTick(millisUntilFinished: Long) {}
 
             override fun onFinish() {
@@ -62,7 +67,11 @@ class AlarmActivity : Activity() {
             vibrator.cancel()
             finish()
         }
+    }
 
-
+    override fun onBackPressed() {
+        ringtone.stop()
+        vibrator.cancel()
+        super.onBackPressed()
     }
 }
