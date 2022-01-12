@@ -7,12 +7,14 @@
     android:background="#373F47"
     tools:context=".AlarmActivity">
 
-    <Button
-        android:id="@+id/closebtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#5A8A93"
-        android:text="TURN OFF"
+
+    <TextView
+        android:id="@+id/hintTV"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:text="SWIPE DOWN TO TURN OFF THE ALARM"
+        android:textAlignment="gravity"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

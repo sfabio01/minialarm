@@ -6,9 +6,7 @@ import android.media.Ringtone
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.*
-import android.view.WindowManager
-import android.widget.Button
-import androidx.appcompat.app.AppCompatActivity
+import android.widget.TextView
 
 class AlarmActivity : Activity() {
 
@@ -18,7 +16,16 @@ class AlarmActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_alarm)
-        val closeBtn: Button = findViewById(R.id.closebtn)
+
+        val hintTV = findViewById<TextView>(R.id.hintTV)
+
+        hintTV.setOnTouchListener(object : OnSwipeTouchListener(this){
+            override fun onSwipeBottom() {
+                ringtone.stop()
+                vibrator.cancel()
+                finish()
+            }
+        })
 
         val vibrate = intent.getBooleanExtra("vibrate", false)
         val ringtoneUri = intent.getStringExtra("ringtone")
@@ -62,11 +69,7 @@ class AlarmActivity : Activity() {
         }
         */
 
-        closeBtn.setOnClickListener {
-            ringtone.stop()
-            vibrator.cancel()
-            finish()
-        }
+
     }
 
     override fun onBackPressed() {
@@ -74,4 +77,6 @@ class AlarmActivity : Activity() {
         vibrator.cancel()
         super.onBackPressed()
     }
+
+
 }
